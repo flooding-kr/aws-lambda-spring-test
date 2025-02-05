@@ -21,12 +21,20 @@ repositories {
 extra["springCloudVersion"] = "2024.0.0"
 
 dependencies {
-    implementation("org.springframework.boot:spring-boot-starter-web")
+    // Kotlin
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Spring Initial
+    implementation("org.springframework.boot:spring-boot-starter-web"){
+        exclude("org.springframework.boot", "spring-boot-starter-tomcat")
+    }
+    testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // AWS Lambda
+    implementation("com.amazonaws.serverless:aws-serverless-java-container-springboot3:2.1.2")
 }
 
 dependencyManagement {
