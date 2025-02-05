@@ -52,3 +52,9 @@ kotlin {
 tasks.withType<Test> {
     useJUnitPlatform()
 }
+
+tasks.withType<Jar> {
+    manifest {
+        attributes["Main-Class"] = "org.springframework.boot.loader.JarLauncher"
+    }
+}
