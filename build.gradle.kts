@@ -3,6 +3,7 @@ plugins {
     kotlin("plugin.spring") version "1.9.25"
     id("org.springframework.boot") version "3.4.2"
     id("io.spring.dependency-management") version "1.1.7"
+    id("com.github.johnrengelman.shadow") version "8.1.1"
 }
 
 group = "kr.flooding"
@@ -28,13 +29,14 @@ dependencies {
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
     // Spring Initial
-    implementation("org.springframework.boot:spring-boot-starter-web"){
-        exclude("org.springframework.boot", "spring-boot-starter-tomcat")
-    }
+    implementation("org.springframework.boot:spring-boot-starter-web")
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 
-    // AWS Lambda
+    // Serverless
     implementation("com.amazonaws.serverless:aws-serverless-java-container-springboot3:2.1.2")
+    implementation("com.amazonaws:aws-lambda-java-core:1.2.3")
+    implementation("com.amazonaws:aws-lambda-java-events:3.14.0")
+    implementation("org.springframework.boot:spring-boot-maven-plugin:3.4.2")
 }
 
 dependencyManagement {
@@ -53,8 +55,15 @@ tasks.withType<Test> {
     useJUnitPlatform()
 }
 
-tasks.withType<Jar> {
+tasks.register<Jar>("buildJar") {
+    from(sourceSets.main.get().output)
+    from(tasks.compileJava)
+    from(tasks.processResources)
+    into("lib") {
+        from(configurations.runtimeClasspath)
+    }
     manifest {
-        attributes["Main-Class"] = "org.springframework.boot.loader.JarLauncher"
+        attributes["Main-Class"] = "kr.flooding.awslambdaspringtest.AwsLambdaSpringTestApplication"
     }
 }
+

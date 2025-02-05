@@ -7,7 +7,6 @@ import com.amazonaws.serverless.proxy.spring.SpringBootLambdaContainerHandler
 import com.amazonaws.services.lambda.runtime.Context
 import com.amazonaws.services.lambda.runtime.RequestHandler
 
-
 class StreamLambdaHandler: RequestHandler<AwsProxyRequest, AwsProxyResponse> {
     override fun handleRequest(input: AwsProxyRequest, context: Context): AwsProxyResponse {
         return handler!!.proxy(input, context)
@@ -18,7 +17,7 @@ class StreamLambdaHandler: RequestHandler<AwsProxyRequest, AwsProxyResponse> {
 
         init {
             try {
-                handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(HealthController::class.java)
+                handler = SpringBootLambdaContainerHandler.getAwsProxyHandler(AwsLambdaSpringTestApplication::class.java)
             } catch (ex: ContainerInitializationException) {
                 throw RuntimeException("Unable to load spring boot application", ex)
             }
